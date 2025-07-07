@@ -2,6 +2,14 @@
 import { Download, Heart, Star, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 
+interface Sticker {
+  id: string;
+  emoji: string;
+  x: number;
+  y: number;
+  photoIndex: number;
+}
+
 interface PhotoStripProps {
   photos: string[];
   onRetake: () => void;
@@ -9,6 +17,28 @@ interface PhotoStripProps {
 
 const PhotoStrip = ({ photos, onRetake }: PhotoStripProps) => {
   const [downloading, setDownloading] = useState(false);
+  const [stickers, setStickers] = useState<Sticker[]>([]);
+  const [selectedSticker, setSelectedSticker] = useState<string>('');
+
+  const cuteStickers = ['🧸', '🐰', '🎈', '🌸', '⭐', '💫', '🎀', '🍓', '🦄', '🌙', '☁️', '🍭'];
+
+  const addSticker = (photoIndex: number, event: React.MouseEvent<HTMLDivElement>) => {
+    if (!selectedSticker) return;
+    
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width) * 100;
+    const y = ((event.clientY - rect.top) / rect.height) * 100;
+    
+    const newSticker: Sticker = {
+      id: Date.now().toString(),
+      emoji: selectedSticker,
+      x,
+      y,
+      photoIndex
+    };
+    
+    setStickers(prev => [...prev, newSticker]);
+  };
 
   const downloadPhotos = () => {
     setDownloading(true);
@@ -41,7 +71,8 @@ const PhotoStrip = ({ photos, onRetake }: PhotoStripProps) => {
     ctx.textAlign = 'center';
     ctx.fillText('SnapSnap Booth 📸', stripWidth / 2, 45);
 
-    // Draw photos
+    // Draw photos and stickers
+    let loadedPhotos = 0;
     photos.forEach((photo, index) => {
       const img = new Image();
       img.onload = () => {
@@ -54,7 +85,17 @@ const PhotoStrip = ({ photos, onRetake }: PhotoStripProps) => {
         ctx.fillStyle = '#C9F8DC';
         ctx.fillRect(stripWidth - 40, y - 10, 30, 15);
         
-        if (index === photos.length - 1) {
+        // Draw stickers on this photo
+        const photoStickers = stickers.filter(sticker => sticker.photoIndex === index);
+        photoStickers.forEach(sticker => {
+          ctx.font = '32px Arial';
+          const stickerX = padding + (stripWidth - padding * 2) * (sticker.x / 100);
+          const stickerY = y + photoHeight * (sticker.y / 100);
+          ctx.fillText(sticker.emoji, stickerX - 16, stickerY + 12);
+        });
+        
+        loadedPhotos++;
+        if (loadedPhotos === photos.length) {
           // Download when all photos are drawn
           setTimeout(() => {
             const link = document.createElement('a');
@@ -102,15 +143,61 @@ const PhotoStrip = ({ photos, onRetake }: PhotoStripProps) => {
             <p className="text-white opacity-90 font-medium">Your Kawaii Memories</p>
           </div>
 
+          {/* Sticker Panel */}
+          <div className="mb-6 p-4 bg-kawaii-mint-light rounded-3xl">
+            <h3 className="text-lg font-bold text-kawaii-blue mb-3 text-center">Add Cute Stickers ✨</h3>
+            <div className="flex flex-wrap justify-center gap-2">
+              {cuteStickers.map((sticker) => (
+                <button
+                  key={sticker}
+                  onClick={() => setSelectedSticker(selectedSticker === sticker ? '' : sticker)}
+                  className={`text-2xl p-2 rounded-full transition-all duration-200 ${
+                    selectedSticker === sticker
+                      ? 'bg-kawaii-blue scale-110 shadow-lg'
+                      : 'bg-white hover:bg-kawaii-yellow-light hover:scale-105'
+                  }`}
+                >
+                  {sticker}
+                </button>
+              ))}
+            </div>
+            {selectedSticker && (
+              <p className="text-sm text-kawaii-blue mt-2 text-center">
+                Click on any photo to add {selectedSticker}
+              </p>
+            )}
+          </div>
+
           {/* Photo strip */}
           <div className="space-y-4">
             {photos.map((photo, index) => (
               <div key={index} className="relative">
-                <img
-                  src={photo}
-                  alt={`Photo ${index + 1}`}
-                  className="w-80 h-60 object-cover rounded-2xl shadow-lg"
-                />
+                <div
+                  className={`relative ${selectedSticker ? 'cursor-crosshair' : ''}`}
+                  onClick={(e) => addSticker(index, e)}
+                >
+                  <img
+                    src={photo}
+                    alt={`Photo ${index + 1}`}
+                    className="w-80 h-60 object-cover rounded-2xl shadow-lg"
+                  />
+                  {/* Render stickers on photo */}
+                  {stickers
+                    .filter(sticker => sticker.photoIndex === index)
+                    .map((sticker) => (
+                      <div
+                        key={sticker.id}
+                        className="absolute text-2xl pointer-events-none"
+                        style={{
+                          left: `${sticker.x}%`,
+                          top: `${sticker.y}%`,
+                          transform: 'translate(-50%, -50%)'
+                        }}
+                      >
+                        {sticker.emoji}
+                      </div>
+                    ))}
+                </div>
                 {/* Photo decorations - updated colors */}
                 <div className="absolute -top-2 -left-2 w-8 h-6 bg-kawaii-mint opacity-75 transform -rotate-12 rounded-sm"></div>
                 <div className="absolute -top-2 -right-2 w-8 h-6 bg-kawaii-lavender opacity-75 transform rotate-12 rounded-sm"></div>
