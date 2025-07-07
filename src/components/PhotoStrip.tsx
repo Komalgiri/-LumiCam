@@ -1,5 +1,5 @@
 
-import { Download, Heart, Star, Sparkles } from 'lucide-react';
+import { Download } from 'lucide-react';
 import { useState } from 'react';
 
 interface PhotoStripProps {
@@ -13,7 +13,6 @@ const PhotoStrip = ({ photos, onRetake }: PhotoStripProps) => {
   const downloadPhotos = () => {
     setDownloading(true);
     
-    // Create a canvas to combine all photos into a strip
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -21,7 +20,7 @@ const PhotoStrip = ({ photos, onRetake }: PhotoStripProps) => {
     const stripWidth = 400;
     const photoHeight = 300;
     const padding = 20;
-    const headerHeight = 80;
+    const headerHeight = 60;
     
     canvas.width = stripWidth;
     canvas.height = headerHeight + (photoHeight + padding) * photos.length + padding;
@@ -30,16 +29,11 @@ const PhotoStrip = ({ photos, onRetake }: PhotoStripProps) => {
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Header with new colors
-    const gradient = ctx.createLinearGradient(0, 0, stripWidth, 0);
-    gradient.addColorStop(0, '#AEE2FF');
-    gradient.addColorStop(1, '#C9F8DC');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, stripWidth, headerHeight);
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 24px Nunito';
+    // Header
+    ctx.fillStyle = '#64748b';
+    ctx.font = 'bold 20px Inter';
     ctx.textAlign = 'center';
-    ctx.fillText('SnapSnap Booth 📸', stripWidth / 2, 45);
+    ctx.fillText('Photo Booth', stripWidth / 2, 35);
 
     // Draw photos
     photos.forEach((photo, index) => {
@@ -48,17 +42,10 @@ const PhotoStrip = ({ photos, onRetake }: PhotoStripProps) => {
         const y = headerHeight + (photoHeight + padding) * index + padding;
         ctx.drawImage(img, padding, y, stripWidth - padding * 2, photoHeight);
         
-        // Add decorative elements with new colors
-        ctx.fillStyle = '#AEE2FF';
-        ctx.fillRect(10, y - 10, 30, 15);
-        ctx.fillStyle = '#C9F8DC';
-        ctx.fillRect(stripWidth - 40, y - 10, 30, 15);
-        
         if (index === photos.length - 1) {
-          // Download when all photos are drawn
           setTimeout(() => {
             const link = document.createElement('a');
-            link.download = 'snapsnap-booth-photos.png';
+            link.download = 'photo-booth-strip.png';
             link.href = canvas.toDataURL();
             link.click();
             setDownloading(false);
@@ -70,36 +57,13 @@ const PhotoStrip = ({ photos, onRetake }: PhotoStripProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-kawaii-yellow-light via-kawaii-mint-light to-kawaii-blue-light p-8 flex flex-col items-center justify-center relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute inset-0 pointer-events-none">
-        <Heart className="absolute top-16 left-16 text-kawaii-blue animate-float" size={32} />
-        <Star className="absolute top-24 right-20 text-kawaii-lavender animate-twinkle" size={28} />
-        <Sparkles className="absolute bottom-20 left-20 text-kawaii-mint animate-float" size={24} style={{ animationDelay: '1s' }} />
-        <Star className="absolute bottom-32 right-32 text-kawaii-yellow animate-twinkle" size={26} style={{ animationDelay: '0.5s' }} />
-        
-        {/* Confetti pattern */}
-        <div className="absolute top-1/4 left-1/4 text-4xl opacity-20">⭐</div>
-        <div className="absolute top-1/3 right-1/4 text-3xl opacity-20">✨</div>
-        <div className="absolute bottom-1/4 left-1/3 text-3xl opacity-20">💫</div>
-        
-        {/* Washi tape decorations - updated colors */}
-        <div className="absolute top-40 left-12 w-24 h-8 bg-kawaii-blue opacity-60 transform -rotate-12 rounded-sm"></div>
-        <div className="absolute top-60 right-16 w-32 h-6 bg-kawaii-mint opacity-60 transform rotate-6 rounded-sm"></div>
-        <div className="absolute bottom-40 left-24 w-20 h-10 bg-kawaii-lavender opacity-60 transform rotate-12 rounded-sm"></div>
-      </div>
-
+    <div className="min-h-screen bg-background p-8 flex flex-col items-center justify-center">
       <div className="relative">
         {/* Photo strip container */}
-        <div className="bg-white p-8 rounded-4xl shadow-2xl transform -rotate-1 hover:rotate-0 transition-transform duration-500 relative">
-          {/* Tape on top - updated colors */}
-          <div className="absolute -top-4 left-1/4 w-16 h-8 bg-kawaii-yellow opacity-75 transform -rotate-6 rounded-sm"></div>
-          <div className="absolute -top-4 right-1/4 w-16 h-8 bg-kawaii-mint opacity-75 transform rotate-6 rounded-sm"></div>
-
+        <div className="bg-white p-6 rounded-2xl shadow-lg">
           {/* Header */}
-          <div className="text-center mb-6 bg-gradient-to-r from-kawaii-blue to-kawaii-mint p-4 rounded-3xl">
-            <h2 className="text-3xl font-black text-white">SnapSnap Booth 📸</h2>
-            <p className="text-white opacity-90 font-medium">Your Kawaii Memories</p>
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold text-foreground">Your Photo Strip</h2>
           </div>
 
           {/* Photo strip */}
@@ -109,39 +73,29 @@ const PhotoStrip = ({ photos, onRetake }: PhotoStripProps) => {
                 <img
                   src={photo}
                   alt={`Photo ${index + 1}`}
-                  className="w-80 h-60 object-cover rounded-2xl shadow-lg"
+                  className="w-80 h-60 object-cover rounded-lg"
                 />
-                {/* Photo decorations - updated colors */}
-                <div className="absolute -top-2 -left-2 w-8 h-6 bg-kawaii-mint opacity-75 transform -rotate-12 rounded-sm"></div>
-                <div className="absolute -top-2 -right-2 w-8 h-6 bg-kawaii-lavender opacity-75 transform rotate-12 rounded-sm"></div>
-                <div className="absolute -bottom-2 -right-2 text-2xl">
-                  {index === 0 ? '💙' : index === 1 ? '✨' : '🌟'}
-                </div>
               </div>
             ))}
           </div>
-
-          {/* Bottom tape - updated color */}
-          <div className="absolute -bottom-4 left-1/3 w-20 h-8 bg-kawaii-blue opacity-75 transform rotate-3 rounded-sm"></div>
         </div>
 
         {/* Action buttons */}
-        <div className="flex justify-center gap-6 mt-8">
+        <div className="flex justify-center gap-4 mt-8">
           <button
             onClick={downloadPhotos}
             disabled={downloading}
-            className="kawaii-button flex items-center gap-3 text-lg relative overflow-hidden group disabled:opacity-50"
+            className="minimal-button flex items-center gap-2 disabled:opacity-50"
           >
-            <Download size={24} />
-            <span>{downloading ? 'Creating...' : '✨ Download Strip'}</span>
-            {downloading && <div className="ml-2 w-4 h-4 bg-white bg-opacity-30 rounded-full animate-ping"></div>}
+            <Download size={16} />
+            <span>{downloading ? 'Creating...' : 'Download as PNG'}</span>
           </button>
 
           <button
             onClick={onRetake}
-            className="bg-gradient-to-r from-red-300 to-red-400 text-white font-bold py-4 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center gap-3 text-lg"
+            className="bg-red-100 text-red-700 font-medium py-3 px-6 rounded-xl hover:bg-red-200 transition-colors duration-200"
           >
-            <span>🔄 Retake Photos</span>
+            Retake Photos
           </button>
         </div>
       </div>
