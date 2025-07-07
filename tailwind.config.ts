@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -18,6 +19,9 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'nunito': ['Nunito', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -52,21 +56,26 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
+				// Kawaii pastel colors
+				kawaii: {
+					pink: '#FFB3D9',
+					'pink-light': '#FFE0F0',
+					blue: '#B3D9FF',
+					'blue-light': '#E0F0FF',
+					lavender: '#D9B3FF',
+					'lavender-light': '#F0E0FF',
+					mint: '#B3FFD9',
+					'mint-light': '#E0FFF0',
+					peach: '#FFD9B3',
+					'peach-light': '#FFF0E0',
 				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
+				sm: 'calc(var(--radius) - 4px)',
+				'3xl': '1.5rem',
+				'4xl': '2rem',
 			},
 			keyframes: {
 				'accordion-down': {
@@ -84,11 +93,64 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'curtain-open': {
+					'0%': {
+						transform: 'scaleX(1)'
+					},
+					'100%': {
+						transform: 'scaleX(0)'
+					}
+				},
+				'float': {
+					'0%, 100%': {
+						transform: 'translateY(0px)'
+					},
+					'50%': {
+						transform: 'translateY(-20px)'
+					}
+				},
+				'twinkle': {
+					'0%, 100%': {
+						opacity: '0.3',
+						transform: 'scale(0.8)'
+					},
+					'50%': {
+						opacity: '1',
+						transform: 'scale(1.2)'
+					}
+				},
+				'sparkle': {
+					'0%': {
+						transform: 'scale(0) rotate(0deg)',
+						opacity: '0'
+					},
+					'50%': {
+						transform: 'scale(1) rotate(180deg)',
+						opacity: '1'
+					},
+					'100%': {
+						transform: 'scale(0) rotate(360deg)',
+						opacity: '0'
+					}
+				},
+				'pulse-glow': {
+					'0%, 100%': {
+						boxShadow: '0 0 20px rgba(255, 179, 217, 0.5)'
+					},
+					'50%': {
+						boxShadow: '0 0 40px rgba(255, 179, 217, 0.8)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'curtain-open': 'curtain-open 2s ease-in-out forwards',
+				'float': 'float 3s ease-in-out infinite',
+				'twinkle': 'twinkle 2s ease-in-out infinite',
+				'sparkle': 'sparkle 1s ease-in-out infinite',
+				'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
 			}
 		}
 	},
