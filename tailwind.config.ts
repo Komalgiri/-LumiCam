@@ -56,18 +56,16 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Kawaii pastel colors
+				// New pastel kawaii colors - no pink!
 				kawaii: {
-					pink: '#FFB3D9',
-					'pink-light': '#FFE0F0',
-					blue: '#B3D9FF',
-					'blue-light': '#E0F0FF',
-					lavender: '#D9B3FF',
-					'lavender-light': '#F0E0FF',
-					mint: '#B3FFD9',
-					'mint-light': '#E0FFF0',
-					peach: '#FFD9B3',
-					'peach-light': '#FFF0E0',
+					blue: '#AEE2FF',
+					'blue-light': '#E0F4FF',
+					mint: '#C9F8DC',
+					'mint-light': '#E8FCF0',
+					lavender: '#D6C8FF',
+					'lavender-light': '#EDE8FF',
+					yellow: '#FFF6A2',
+					'yellow-light': '#FFFCE5',
 				}
 			},
 			borderRadius: {
@@ -94,12 +92,20 @@ export default {
 						height: '0'
 					}
 				},
-				'curtain-open': {
+				'shutter-open': {
 					'0%': {
-						transform: 'scaleX(1)'
+						transform: 'translateY(0%)'
 					},
 					'100%': {
-						transform: 'scaleX(0)'
+						transform: 'translateY(-100%)'
+					}
+				},
+				'shutter-close': {
+					'0%': {
+						transform: 'translateY(100%)'
+					},
+					'100%': {
+						transform: 'translateY(0%)'
 					}
 				},
 				'float': {
@@ -134,23 +140,35 @@ export default {
 						opacity: '0'
 					}
 				},
-				'pulse-glow': {
+				'sparkle-glow': {
 					'0%, 100%': {
-						boxShadow: '0 0 20px rgba(255, 179, 217, 0.5)'
+						boxShadow: '0 0 20px rgba(174, 226, 255, 0.5)'
 					},
 					'50%': {
-						boxShadow: '0 0 40px rgba(255, 179, 217, 0.8)'
+						boxShadow: '0 0 40px rgba(174, 226, 255, 0.8)'
+					}
+				},
+				'bounce-bubble': {
+					'0%, 100%': {
+						transform: 'scale(1)',
+						opacity: '1'
+					},
+					'50%': {
+						transform: 'scale(1.2)',
+						opacity: '0.8'
 					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'curtain-open': 'curtain-open 2s ease-in-out forwards',
+				'shutter-open': 'shutter-open 1s ease-in-out forwards',
+				'shutter-close': 'shutter-close 1s ease-in-out forwards',
 				'float': 'float 3s ease-in-out infinite',
 				'twinkle': 'twinkle 2s ease-in-out infinite',
 				'sparkle': 'sparkle 1s ease-in-out infinite',
-				'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+				'sparkle-glow': 'sparkle-glow 2s ease-in-out infinite',
+				'bounce-bubble': 'bounce-bubble 0.8s ease-in-out infinite',
 			}
 		}
 	},
